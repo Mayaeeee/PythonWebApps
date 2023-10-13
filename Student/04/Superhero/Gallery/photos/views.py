@@ -1,9 +1,21 @@
+from pathlib import Path
+from typing import Any
+from django import http
 from django.views.generic import TemplateView
 
-# Create your views here.
-class PhotoView(TemplateView): template_name = 'photo.html'
+class PhotoView(TemplateView):
+    template_name  = 'photo.html'
 
-def get_context_data(self, **kwargs):
-    p = kwargs['name']
-    p = f'/static/images/{p}'
-    return dict(photo=p)
+    def get_context_data(self, **kwargs):
+        name = kwargs['name']
+        image = f'static\images{name}'
+        return {'photo': image}
+
+
+class PhotoListView(TemplateView):
+    template_name = 'photos.html'
+
+    def get_context_data(self, **kwargs):
+        photos = Path('static/images').iterdir()
+        photos = [f for f in photos]
+        return dict(photos=photos)
